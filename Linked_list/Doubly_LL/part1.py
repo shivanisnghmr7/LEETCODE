@@ -1,6 +1,100 @@
+"""
+146: LRU: https://leetcode.com/problems/lru-cache/
+
+Summary:
+1. keep 2 ptr: 1. head and 2. tail
+2. write functions:
+    add on top
+    move on top
+    remove
+    remove tail
+
+Time/Space: O(n)
+"""
+class Node:
+    def __init__(self, key=None, val=None):
+        self.key = key
+        self.val = val
+        self.next = None
+        self.prev = None
+
+class DoubleLinkedList:
+    """
+    Summary: Keep 2 pointer: 1. head; 2. tail
+    """
+    def __init__(self):
+        # create head and tail ptrs
+        self.head = Node()
+        self.tail = Node()
+
+        # make connection
+        self.head.next = self.tail
+        self.tail.prev = self.head
+    
+    # add on top
+    def add_on_top(self, node):
+        # fix prev and next of node
+        node.prev = self.head
+        node.next = self.head.next
+
+        # fix neighbor node
+        self.head.next.prev = node
+        self.head.next = node
+        return True
+    
+    # move on top
+    def move_on_top(self):
+        node = self.remove_tail()
+        return self.add_on_top(node)
+    
+    # remove
+    def remove(self, node):
+        prev = node.prev
+        next = node.next
+
+        prev.next = next
+        next.prev = prev
+        return True
+
+    # remove tail
+    def remove_tail(self):
+        key = self.tail.prev.key
+        self.remove(self.tail.prev)
+        return key
+
+class LRUCache:
+    def __init__(self, capacity):
+        self.cache = {}
+        self.DD = DoubleLinkedList()
+        self.capacity = capacity
+    
+    def get(self, key):
+        # check the cache
+        node = self.cache.get(key)
+        if val is None:
+            return -1
+        # move on top
+        self.DD.move_on_top(key)
+        return node.val
+
+    def put(self, key, val):
+        # check cache
+        node = self.cache.get(key)
+        # if exists: move to top
+        if node is None:
+            self.cache[key] = Node(key, val)
+            self.DD.add_on_top(self.cache[key])
+            if self.capacity < len(self.cache):
+                key = self.DD.remove_tail()
+                del self.cache[key]
+        else:
+            node.val = val
+            self.DD.add_on_top(node) 
+        # if not? add and check len of LL.
+        # if len exceed, then delete last
 
 """
-138. https://leetcode.com/problems/copy-list-with-random-pointer/
+138. copy LL with random pointer: https://leetcode.com/problems/copy-list-with-random-pointer/
 
 Summary:
 1. create A->A'->B->B'->C->C' from A->B->C (exactly like insert)
@@ -39,7 +133,7 @@ def copy_list_with_random_ptr(head):
     return copy_new
 
 """
-430. https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/
+430. flatten a multilevel to DLL: https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/
 
 Summary:
 1. keep 2 pointers: 1. prev, 2. dummy

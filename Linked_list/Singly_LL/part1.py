@@ -1,5 +1,37 @@
 """
+
+Questions covered:
+•	Remove linked list element: https://leetcode.com/problems/remove-linked-list-elements/
+•	Remove duplicates from sorted LL: https://leetcode.com/problems/remove-duplicates-from-sorted-list/
+•	Reverse a Linked List: https://leetcode.com/problems/reverse-linked-list/
+•	Reverse LL in between range: https://leetcode.com/problems/reverse-linked-list-ii/
+•	Middle of LL: https://leetcode.com/problems/middle-of-the-linked-list/
+•	Detect Cycle in a Linked List: 
+•	Find cycle in linked list: https://leetcode.com/problems/linked-list-cycle-ii/
+•   Insert into a sorted circular linked list: https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list/
+•	Intersection of 2 LL: https://leetcode.com/problems/intersection-of-two-linked-lists/
+•	Merge Two Sorted Lists: https://leetcode.com/problems/merge-two-sorted-lists/
+•	Merge K Sorted Lists: https://leetcode.com/problems/merge-k-sorted-lists/
+•	Remove Nth Node From End Of List: https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+•	Rotate List: https://leetcode.com/problems/rotate-list/
+•	Reorder List: https://leetcode.com/problems/reorder-list/
+•	Swap nodes in pairs: https://leetcode.com/problems/swap-nodes-in-pairs/
+•	Reverse node in k group: https://leetcode.com/problems/reverse-nodes-in-k-group/
+•	Palindrome LL: https://leetcode.com/problems/palindrome-linked-list/
+•	Partition list: https://leetcode.com/problems/partition-list/
+•	Odd and even LL: https://leetcode.com/problems/odd-even-linked-list/
+•	Sort LL: https://leetcode.com/problems/sort-list/
+•	Add 2 linked list: https://leetcode.com/problems/add-two-numbers/
+•	Add 2 linked list ii (different lengths): https://leetcode.com/problems/add-two-numbers-ii/
+•	Convert SLL to BST: https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/
+•	Convert BST to SLL: https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+
+"""
+
+
+"""
 203. remove element from linked list (if duplicates) https://leetcode.com/problems/remove-linked-list-elements/
+237. delete element from LL: https://leetcode.com/problems/delete-node-in-a-linked-list/
 
 Summary:
 1. Questions to ask: if the val exists multiple times?
@@ -27,7 +59,26 @@ def remove-linked-list-elements(head, val):
     return head
 
 """
-206: https://leetcode.com/problems/reverse-linked-list/
+83. Remove duplicates from sorted LL: https://leetcode.com/problems/remove-duplicates-from-sorted-list/
+
+Summary:
+1. remove from list if duplicate is found.
+
+Time/Space: O(n)/O(1)
+"""
+
+def remove_duplicates(head):
+    if head is None: return None
+    curr = head
+    while curr:
+        while curr.next and curr.next.val == curr.val:
+            curr.next = curr.next.next
+        curr = curr.next
+    return head
+
+
+"""
+206: reverse LL: https://leetcode.com/problems/reverse-linked-list/
 
 Summary:
 1. keep 3 pointer:
@@ -58,6 +109,61 @@ def reverse-linked-list(head):
     # handle head
     head = curr
     return head
+
+"""
+92. reverse Linked List between the range: https://leetcode.com/problems/reverse-linked-list-ii/
+
+Summary:
+1. maintain prev, curr till hit m.
+2. reverse after hitting m till n. also, make copy of start of m and end of n.
+3. link the reverse part in proper order
+"""
+
+def reverse_LL_ii(head, m, n):
+    if head is None: return None
+
+    # wait to hit m
+    prev, curr = None, head
+    while m > 1:
+        prev = curr
+        curr = curr.next
+        m -= 1
+        n -= 1
+
+    # reverse till hit n
+    before_m, after_n = prev, curr
+    while n:
+        next = curr.next
+        curr.next = prev
+        prev = curr
+        curr = curr.next
+    
+    # before start of m and after end of n (connect them):
+    if before_m:
+        before_m.next = prev
+    else:
+        head = prev
+    
+    after_n.next = curr
+    return head
+
+"""
+876. Middle of LL: https://leetcode.com/problems/middle-of-the-linked-list/
+
+Summary:
+1. slow and fast pointer
+2. return slow
+
+Time/space: O(n)
+"""
+
+def middle(head):
+    if head is None: return None
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    return slow
 
 """
 141. find cycle in Linked List: https://leetcode.com/problems/linked-list-cycle/
@@ -98,6 +204,11 @@ def linked_list_cycle_ii(head):
     while ptr1 != ptr2:
         ptr1, ptr2 = ptr1.next, ptr2.next
     return ptr1
+
+"""
+# TODO
+708. Insert into a sorted circular linked list: https://leetcode.com/problems/insert-into-a-sorted-circular-linked-list/
+"""
 
 """
 160. intersection of Linked List: https://leetcode.com/problems/intersection-of-two-linked-lists/
@@ -143,6 +254,31 @@ def merge_two_sorted_lists(l1, l2):
         curr = curr.next
     if l1 or l2:
         curr.next = l1 or l2
+    return dummy.next
+
+"""
+23. Merge K Sorted Lists: https://leetcode.com/problems/merge-k-sorted-lists/
+
+Summary: 
+1. keep dummy, and maintain a Priotity queue like heap. 
+2. insert all the 1st element of sorted LL into queue.
+3. if element in queue, keep extracting from queue and simultaneously keep adding.
+
+Time/Space: O(n)/O(n)
+"""
+
+from queue import PriorityQueue
+def merge_K_sorted_LL(lists):
+    dummy = curr = Node(0)
+    q = PriorityQueue()
+    for node in lists:
+        if node:
+            q.put((node.val, node))
+    
+    while q:
+        curr.next = q.get()[1]
+        curr = curr.next
+        if curr.next: q.put((curr.next.val, curr.next))
     return dummy.next
 
 """
@@ -323,6 +459,135 @@ def reverse_k_group(head):
             return dummy.next
 
 """
+234. Palindrom LL: https://leetcode.com/problems/palindrome-linked-list/
+
+Summary:
+1. find the mid
+2. reverse the 2nd half
+3. compare palindrome
+
+Time/Space: O(n)/O(1)
+"""
+def palindrome_LL(head):
+    if head is None: return None
+    # find mid
+    slow = fast = head
+    while fast and fast.next:
+        slow, fast = slow.next, fast.next.next
+    # reverse
+    prev = None
+    while slow:
+        next = slow.next
+        slow.next = prev
+        prev = slow
+        slow = next
+    # compare palindrome
+    while prev:
+        if prev.val != head.val: return False
+        prev = prev.next
+        head = head.next
+    return True
+
+"""
+86. Partition list: https://leetcode.com/problems/partition-list/
+
+Summary:
+1. create 2 ptr. dummy_less, dummy_more.
+2. if element < x: extend dummy less and vice versa.
+3. link greater after smaller.
+
+Time/Space: O(n)/O(1)
+"""
+
+def partition_list(head, x):
+    if head is None: return None
+        
+    dummy1 = less = ListNode(0)
+    dummy2 = high = ListNode(0)
+    
+    while head:
+        if head.val < x:
+            less.next = head
+            less = less.next
+        else:
+            high.next = head
+            high = high.next
+        head = head.next
+    high.next = None
+    less.next = dummy2.next
+    return dummy1.next
+
+"""
+148. sort: https://leetcode.com/problems/sort-list/
+
+Summary:
+1. keep cutting half using fast and slow pointer. also, using recursion
+2. merge the smaller one first in LL
+
+Time/Space: O(nlogn)/O(1)
+"""
+
+def sort_LL(head):
+    # testcase
+    if head is None or head.next is None: return head
+    
+    # find mid
+    slow = fast = head
+    while fast and fast.next:
+        slow, fast = slow.next, fast.next.next
+    h2 = slow.next
+    slow.next = None
+
+    left = sort_LL(head)
+    right = sort_LL(h2)
+    return merge(left, right)
+
+def merge(left, right):
+    # testcase
+    if not left or not right: return left or right
+    # invalid test case
+    if left.val > right.val: left, right = right, left# swap
+    head = pre = left
+    left = left.next # iterator
+    while left and right:
+        if left.val < right.val:
+            pre.next = left
+            left = left.next
+        else:
+            pre.next = right
+            right = right.next
+        pre = pre.next
+    # if left or right is left
+    if (left or right): pre.next = left or right
+    return head
+
+"""
+328. odd and even LL: https://leetcode.com/problems/odd-even-linked-list/
+
+Summary:
+1. create dummy1 for odd and dummy2 for even.
+2. keep extending odd and even.
+3. iterate update odd and even and head
+4. attach odd after even
+
+Time/Space: O(n)/O(1)
+"""
+
+def odd_even_LL(head):
+    dummy1 = odd = Node(0)
+    dummy2 = even = Node(0) 
+    while head:
+        # extend
+        odd.next = head
+        even.next = head.next
+        # iterate update
+        odd = odd.next
+        even = even.next
+        head = head.next if head else None
+    odd.next = dummy2.next
+    return head
+
+"""
 2. add two number: https://leetcode.com/problems/add-two-numbers/
 
 Summary:
@@ -421,3 +686,38 @@ def findsize(head):
         curr = curr.next
         count += 1
     return count
+
+"""
+114. Convert BST to SLL: https://leetcode.com/problems/flatten-binary-tree-to-linked-list/
+
+Summary:
+1. find the rightmost elem on left side.
+2. copy the node.right on rightmost.right
+3. make node.right as rightmost
+4. delete left of node
+5. go right
+
+Time/Space: O(n)/O(1)
+"""
+
+def flatten_BT_LL(root):
+    if root is None: return None
+
+    node = root
+    while node:
+        # go to left
+        if node.left:
+            rightmost = node.left
+            # find the right most
+            while rightmost.right:
+                rightmost = rightmost.right
+            
+            # save the node right branch under rightmost.right
+            rightmost.right = node.right
+            # move the right branch to left now
+            node.right = node.left
+            # make left None
+            node.left = None
+        # go to right
+        node = node.right
+    return root
