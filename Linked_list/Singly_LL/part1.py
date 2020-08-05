@@ -2,6 +2,7 @@
 
 Questions covered:
 •	Remove linked list element: https://leetcode.com/problems/remove-linked-list-elements/
+•   delete element from LL: https://leetcode.com/problems/delete-node-in-a-linked-list/
 •	Remove duplicates from sorted LL: https://leetcode.com/problems/remove-duplicates-from-sorted-list/
 •	Reverse a Linked List: https://leetcode.com/problems/reverse-linked-list/
 •	Reverse LL in between range: https://leetcode.com/problems/reverse-linked-list-ii/
@@ -28,6 +29,13 @@ Questions covered:
 
 """
 
+"""
+######################
+#                    #
+#   PATTERN: Basics  #
+#                    #
+######################
+"""
 
 """
 203. remove element from linked list (if duplicates) https://leetcode.com/problems/remove-linked-list-elements/
@@ -137,6 +145,7 @@ def reverse_LL_ii(head, m, n):
         curr.next = prev
         prev = curr
         curr = curr.next
+        n -= 1
     
     # before start of m and after end of n (connect them):
     if before_m:
@@ -146,6 +155,14 @@ def reverse_LL_ii(head, m, n):
     
     after_n.next = curr
     return head
+
+"""
+#####################################
+#                                   #
+#   PATTERN: Slow and Fast Pointer  #
+#                                   #
+#####################################
+"""
 
 """
 876. Middle of LL: https://leetcode.com/problems/middle-of-the-linked-list/
@@ -232,6 +249,14 @@ def intersection_of_two_linked_lists(headA, headB):
     return ptrA
 
 """
+#################################
+#                               #
+#   PATTERN: Merge LL (dummy)   #
+#                               #
+#################################
+"""
+
+"""
 21. merge 2 sorted Linked List: https://leetcode.com/problems/merge-two-sorted-lists/
 
 Summary:
@@ -282,6 +307,35 @@ def merge_K_sorted_LL(lists):
     return dummy.next
 
 """
+86. Partition list: https://leetcode.com/problems/partition-list/
+
+Summary:
+1. create 2 ptr. dummy_less, dummy_more.
+2. if element < x: extend dummy less and vice versa.
+3. link greater after smaller.
+
+Time/Space: O(n)/O(1)
+"""
+
+def partition_list(head, x):
+    if head is None: return None
+        
+    dummy1 = less = ListNode(0)
+    dummy2 = high = ListNode(0)
+    
+    while head:
+        if head.val < x:
+            less.next = head
+            less = less.next
+        else:
+            high.next = head
+            high = high.next
+        head = head.next
+    high.next = None
+    less.next = dummy2.next
+    return dummy1.next
+
+"""
 19. remove nth node from end of the Linked List: https://leetcode.com/problems/remove-nth-node-from-end-of-list/
 
 Summary:
@@ -301,6 +355,85 @@ def remove_nth_node_from_end_of_list(head, n):
         slow, fast = slow.next, fast.next
     slow.next = slow.next.next
     return head
+
+
+"""
+148. sort: https://leetcode.com/problems/sort-list/
+
+Summary:
+1. keep cutting half using fast and slow pointer. also, using recursion
+2. merge the smaller one first in LL
+
+Time/Space: O(nlogn)/O(1)
+"""
+
+def sort_LL(head):
+    # testcase
+    if head is None or head.next is None: return head
+    
+    # find mid
+    slow = fast = head
+    while fast and fast.next:
+        slow, fast = slow.next, fast.next.next
+    h2 = slow.next
+    slow.next = None
+
+    left = sort_LL(head)
+    right = sort_LL(h2)
+    return merge(left, right)
+
+def merge(left, right):
+    # testcase
+    if not left or not right: return left or right
+    # invalid test case
+    if left.val > right.val: left, right = right, left# swap
+    head = pre = left
+    left = left.next # iterator
+    while left and right:
+        if left.val < right.val:
+            pre.next = left
+            left = left.next
+        else:
+            pre.next = right
+            right = right.next
+        pre = pre.next
+    # if left or right is left
+    if (left or right): pre.next = left or right
+    return head
+
+"""
+328. odd and even LL: https://leetcode.com/problems/odd-even-linked-list/
+
+Summary:
+1. create dummy1 for odd and dummy2 for even.
+2. keep extending odd and even.
+3. iterate update odd and even and head
+4. attach odd after even
+
+Time/Space: O(n)/O(1)
+"""
+
+def odd_even_LL(head):
+    dummy1 = odd = Node(0)
+    dummy2 = even = Node(0) 
+    while head:
+        # extend
+        odd.next = head
+        even.next = head.next
+        # iterate update
+        odd = odd.next
+        even = even.next
+        head = head.next if head else None
+    odd.next = dummy2.next
+    return head
+
+"""
+#################################
+#                               #
+#   PATTERN: Rotate Questions   #
+#                               #
+#################################
+"""
 
 """
 61. rotate Linked List: https://leetcode.com/problems/rotate-list/
@@ -489,105 +622,6 @@ def palindrome_LL(head):
     return True
 
 """
-86. Partition list: https://leetcode.com/problems/partition-list/
-
-Summary:
-1. create 2 ptr. dummy_less, dummy_more.
-2. if element < x: extend dummy less and vice versa.
-3. link greater after smaller.
-
-Time/Space: O(n)/O(1)
-"""
-
-def partition_list(head, x):
-    if head is None: return None
-        
-    dummy1 = less = ListNode(0)
-    dummy2 = high = ListNode(0)
-    
-    while head:
-        if head.val < x:
-            less.next = head
-            less = less.next
-        else:
-            high.next = head
-            high = high.next
-        head = head.next
-    high.next = None
-    less.next = dummy2.next
-    return dummy1.next
-
-"""
-148. sort: https://leetcode.com/problems/sort-list/
-
-Summary:
-1. keep cutting half using fast and slow pointer. also, using recursion
-2. merge the smaller one first in LL
-
-Time/Space: O(nlogn)/O(1)
-"""
-
-def sort_LL(head):
-    # testcase
-    if head is None or head.next is None: return head
-    
-    # find mid
-    slow = fast = head
-    while fast and fast.next:
-        slow, fast = slow.next, fast.next.next
-    h2 = slow.next
-    slow.next = None
-
-    left = sort_LL(head)
-    right = sort_LL(h2)
-    return merge(left, right)
-
-def merge(left, right):
-    # testcase
-    if not left or not right: return left or right
-    # invalid test case
-    if left.val > right.val: left, right = right, left# swap
-    head = pre = left
-    left = left.next # iterator
-    while left and right:
-        if left.val < right.val:
-            pre.next = left
-            left = left.next
-        else:
-            pre.next = right
-            right = right.next
-        pre = pre.next
-    # if left or right is left
-    if (left or right): pre.next = left or right
-    return head
-
-"""
-328. odd and even LL: https://leetcode.com/problems/odd-even-linked-list/
-
-Summary:
-1. create dummy1 for odd and dummy2 for even.
-2. keep extending odd and even.
-3. iterate update odd and even and head
-4. attach odd after even
-
-Time/Space: O(n)/O(1)
-"""
-
-def odd_even_LL(head):
-    dummy1 = odd = Node(0)
-    dummy2 = even = Node(0) 
-    while head:
-        # extend
-        odd.next = head
-        even.next = head.next
-        # iterate update
-        odd = odd.next
-        even = even.next
-        head = head.next if head else None
-    odd.next = dummy2.next
-    return head
-
-"""
 2. add two number: https://leetcode.com/problems/add-two-numbers/
 
 Summary:
@@ -615,6 +649,14 @@ def add_two_number(l1, l2):
         curr.next = Node(val)
         curr = curr.next
     return dummy.next
+
+"""
+#################################
+#                               #
+#   PATTERN: adding Questions   #
+#                               #
+#################################
+"""
 
 """
 445: add two number of different length: https://leetcode.com/problems/add-two-numbers-ii/
@@ -647,6 +689,14 @@ def construct_numb(link):
         num += link.val
         link = link.next
     return num
+
+"""
+##############################################
+#                                            #
+#   PATTERN: Binary Tree with LL Questions   #
+#                                            #
+##############################################
+"""
 
 """
 109. sorted LL to BST: https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/
