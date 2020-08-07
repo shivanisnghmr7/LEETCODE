@@ -29,6 +29,26 @@ Longest Subsequence:
 """
 
 """
+322. Rod cutting/minimum Coin change/maximum Robin cutting: https://leetcode.com/problems/coin-change/
+
+Summary:
+1. create a dp (amount+1)
+2. iterate over coins available/iterate over coin to amount+1
+3. dp = min(dp[i], dp[i-coin]+1)
+
+Time/Space: O(n2)/O(n)
+"""
+
+def Minimum_coin_change(coins, amount):
+    dp = [True for _ in range(amount+1)]
+    dp[0] = 0 # to get 0 coin
+    for coin in coins:
+        for i in range(coin, amount+1):
+            dp[i] = min(dp[i], dp[i-coin]+1)
+    if dp[-1] == float('-inf'): return -1
+    return dp[-1]
+
+"""
 ###########################################################
 #                                                         #
 #                                                         #
@@ -39,6 +59,145 @@ Longest Subsequence:
 """
 
 """
+509. fibonacci number: https://leetcode.com/problems/fibonacci-number/
+
+Summary:
+1. keep a, b to save last 2 sums
+2. edge case: N = 0 and 1
+
+Time/Space: O(n)/O(1)
+"""
+
+def fibonacci(N):
+    a, b = 0, 1
+    if N == 0: return a
+    if N == 1: return b
+    index = 1
+    def helper(N):
+        nonlocal index, a, b
+        if index == N: return b
+        a, b = b, a+b
+        index += 1
+        helper(N)
+    return helper(N)
+
+"""
+70. climbing stairs: https://leetcode.com/problems/climbing-stairs/
+
+Summary:
+1. ways to climb 1 stairs is 1 way. and way to climb 2 stair is also 1 way.
+2. then follow fibannoci
+
+Time/Space: O(n)/O(1)
+"""
+
+def climbing_stairs(n):
+    a, b = 1, 1
+    for i in range(1, n):
+        a, b = b, a+b
+    return b
+
+"""
+climbing stairs with 1 step, 2 step, 3 step
+
+Summary:
+1. one step, two step, three step = 1, 1, 2
+2. then follow fibannoci
+
+Time/Space: O(n)/O(1)
+"""
+
+def climbing_stairs_ii(n):
+    one, two, three = 1, 1, 2
+    for i in range(n):
+        one, two, three = two, three, one+two+three
+    return three
+
+"""
+198. house robber: https://leetcode.com/problems/house-robber/
+
+Summary:
+1. either robber will rob last house or second last house.
+2. one variable to maintain max of last two
+
+Time/Space: O(n)/O(1)
+"""
+
+def house_robber(arr):
+    one, two, three = 0, 0, 0
+    for i in arr:
+        one, two, three = two, three, max(two, three)
+    return max(two, three)
+
+"""
+213. house robber ii: https://leetcode.com/problems/house-robber-ii/
+
+Summary:
+1. either first house is included or last house
+2. edge case arr: no house or 1 house
+
+Time/Space: O(n)/O(1)
+"""
+
+def house_robber_ii(arr):
+
+    def helper(arr):
+        one, two = 0, 0
+        for i in arr:
+            one, two = two+i, max(one, two)
+        return max(one, two)
+
+    # edge case
+    if not arr: return 0
+    if len(arr) == 1: return arr[0]
+    #either first house is included or last house
+    return max(helper(arr[1:]), helper(arr[:-1]))
+
+"""
+55. Jump Game: https://leetcode.com/problems/jump-game/
+
+Summary:
+1. start in reverse from 2nd last
+2. check if the jump (i+nums[i]) can cross last
+    if it can, update the last and check if we can reach the start
+
+Time/Space: O(n)/O(1)
+"""
+
+def jump_game(arr):
+    last = len(arr)-1
+    for i in range(last-1, -1, -1):
+        if i+nums[i] >= last:
+            last = i
+    return last == 0
+
+"""
+45. Minimum jumps in Jump Game: https://leetcode.com/problems/jump-game-ii/
+
+Summary:
+1. create 2 pointer
+    a. max_positions covered: maintain max(max_positions, i+nums[i])
+    b. max_steps: take max_steps to reach end
+2. if max_steps is unable to reach i
+    then take one more jump
+    update max_steps
+3. edge case if arr < 2
+
+Time/Space: O(n)/O(1)
+"""
+
+def mini_jump_game(arr):
+    n = len(arr)
+    if n < 2: return 0
+    max_step, max_pos, jump = arr[0], arr[0], 1
+    for i in range(n):
+        if max_step < i:
+            jump += 1
+            max_step = max_pos
+        max_pos = max(max_pos, i+arr[i])
+    return jump
+
+"""
 ###########################################################
 #                                                         #
 #                                                         #
@@ -47,6 +206,42 @@ Longest Subsequence:
 #                                                         #
 ###########################################################
 """
+
+"""
+516. longest palindromic subsequence: https://leetcode.com/problems/longest-palindromic-subsequence/
+
+Summary:
+remove 2d into 1d
+1. keep 1 old row and keep one new row
+2. start scanning from behind (i) and (j) from i+1 to n
+3. mark diagonal with 1 in new
+4. if s[i] == s[j]:
+        new[j] = 2+dp[j-1] # 2+diagonal
+    else:
+        new[j] = max(dp[j], new[j-1]) 
+
+Time/Space: O(n^2)/O(n)
+"""
+
+def LPS(s):
+    n = len(s)
+    # if palindrome is already sorted
+    if s == s[::-1]: return len(s)
+    dp = [0 for i in range(n)] # old dp
+    dp[n-1] = 1 # mark last diagonal
+
+    for i in range(n-1, -1, -1):
+        new = dp[:]
+        new[i] = 1
+        for j in range(i+1, n):
+            if s[i] == s[j]:
+                new[j] = 2+dp[j-1] # 2+down diagonal
+            else:
+                new[j] = max(dp[j], new[j-1])
+        dp = new
+    return dp[-1]
+            
+
 
 """
 ###########################################################

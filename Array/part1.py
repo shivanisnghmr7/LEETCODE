@@ -11,6 +11,7 @@ One pointer:
 Two pointer:
     remove duplicates more than 2 times in sorted array: https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/
     next permutation: https://leetcode.com/problems/next-permutation/
+    longest palindromic substring: https://leetcode.com/problems/longest-palindromic-substring/
 Three Pointer:
     Dutch national flag: https://leetcode.com/problems/sort-colors/
 Subsets: 
@@ -182,6 +183,102 @@ def Next_Permutation(arr):
         arr[ptr1], arr[ptr2] = arr[ptr2], arr[ptr1]
         ptr2 -= 1; ptr1 += 1
     return(arr)
+
+"""
+5. longest palindromic substring: https://leetcode.com/problems/longest-palindromic-substring/
+
+Summary:
+1. keep 2 ptr.
+
+Time/Space: O(n^2)/O(1)
+"""
+
+def LPS(arr):
+    n = len(res)
+    if n < 2: return n
+    res = ""
+    for i in range(n):
+        tmp = helper(s, i, i)
+        if len(tmp) > len(res):
+            res = tmp
+        tmp = helper(s, i, i+1)
+        if len(tmp) > len(res):
+            res = tmp
+    return res
+
+def helper(s, i, j):
+    while i >= 0 and j < len(s) and s[i] == s[j]:
+        i -= 1
+        j += 1
+    return s[i+1:j]
+
+"""
+647. Count Palindromic Substring: https://leetcode.com/problems/palindromic-substrings/
+
+Summary:
+1. total number of palindromic will be 2n-1
+2. find center, left from cente and right from center
+3. start comparing left and right for palindrome
+
+Time/Space: O(n2)/O(1)
+"""
+
+def count_Palindrome(arr):
+    n = len(arr)
+    count = 0
+    for center in range(2*n-1):
+        left = center//2
+        right = left + (center%2)
+        while left >= 0 and right < n and arr[left] == arr[right]:
+            count += 1
+            left -= 1
+            right += 1
+    return count
+
+"""
+125. valid palindrome: https://leetcode.com/problems/valid-palindrome/
+
+Summary:
+1. keep 2 ptr: 1. left and right
+2. if found space or not alphabet then incr
+3. if alpha is found:
+    compare alpha lower
+
+Time/Space: O(n)/O(1)
+"""
+
+def valid(arr):
+    left, right = 0, len(arr)-1
+    while left < right:
+        if not arr[left].isalpha(): left += 1
+        if not arr[right].isalpha(): right -= 1
+        else:
+            if arr[left].lower() != arr[right].lower():
+                return False
+            left += 1
+            right -= 1
+    return True
+
+"""
+680. delete one character to make palindrome: https://leetcode.com/problems/valid-palindrome-ii/
+
+Summary:
+1. keep 2 ptr.
+2. if not equal:
+try skipping one character
+
+Time/Space: O(n)/O(1)
+"""
+
+def delete_palindrome(arr):
+    left, right = 0, len(arr)-1
+    while left < right:
+        if arr[left] != arr[right]:
+            one, two = arr[left:right], arr[left+1: right+1]
+            return one == one[::-1] or two == two[::-1]
+        left += 1
+        right -= 1
+    return True
 
 """
 204. count number of prime number: https://leetcode.com/problems/count-primes/
