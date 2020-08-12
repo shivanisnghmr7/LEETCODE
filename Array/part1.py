@@ -1,91 +1,158 @@
 """
 Questions covered:
 One pointer:
-    remove duplicates in sorted array: https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+    2 Sum: https://leetcode.com/problems/two-sum/
+    Contains Duplicate: https://leetcode.com/problems/contains-duplicate/
     Best Time to Buy and Sell Stocks: https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
     Best Time to Buy and Sell Stocks ii : https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
     Best Time to Buy and Sell Stocks iii : https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/
     Jump game: https://leetcode.com/problems/jump-game/
     Minimum steps in Jump game: https://leetcode.com/problems/jump-game-ii/
     count prime number: https://leetcode.com/problems/count-primes/
+    Maximum Subarray: https://leetcode.com/problems/maximum-subarray/
+    Monotonic array: https://leetcode.com/problems/monotonic-array/
+
 Two pointer:
+    2 Sum ii: https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/
+    Product of Array Except Self: https://leetcode.com/problems/product-of-array-except-self/
+    remove duplicates in sorted array: https://leetcode.com/problems/remove-duplicates-from-sorted-array/
     remove duplicates more than 2 times in sorted array: https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/
     next permutation: https://leetcode.com/problems/next-permutation/
     longest palindromic substring: https://leetcode.com/problems/longest-palindromic-substring/
+    Container With Most Water: https://leetcode.com/problems/container-with-most-water/
+    Trapping Rain Water: https://leetcode.com/problems/trapping-rain-water/
+
 Three Pointer:
     Dutch national flag: https://leetcode.com/problems/sort-colors/
+    3 Sum: https://leetcode.com/problems/3sum
+    3 Sum Closest: https://leetcode.com/problems/3sum-closest/
+    Merge sorted array with no space: https://leetcode.com/problems/merge-sorted-array/
+    Make Maximum number from string: https://leetcode.com/problems/maximum-swap/
+
+Quick sort:
+    Kth largest element in array: https://leetcode.com/problems/kth-largest-element-in-an-array/
+
+Sliding the window pattern:
+    Subarray sum equal to K: https://leetcode.com/problems/subarray-sum-equals-k/
+
+Merge Interval:
+    Merge Intervals: https://leetcode.com/problems/merge-intervals/
+    Interval list intersection: https://leetcode.com/problems/interval-list-intersections/
+
 Subsets: 
     find subset of array: https://leetcode.com/problems/subsets/
     find subset of arary with duplicates: https://leetcode.com/problems/subsets-ii/
     permutation: https://leetcode.com/problems/permutations/
     Generate Parentheses: https://leetcode.com/problems/generate-parentheses/
+
 Math:   
     plus one: https://leetcode.com/problems/plus-one/
     multiple 2 string: https://leetcode.com/problems/multiply-strings/
+
+Matrix:
+    Leftmost col with at least a one: https://leetcode.com/problems/leftmost-column-with-at-least-a-one/
+
 API:
     Shuffle array: https://leetcode.com/problems/shuffle-an-array/
     random pick index: https://leetcode.com/problems/random-pick-index/
+
+Matrix:
+    Leftmost col with at least a one: https://leetcode.com/problems/leftmost-column-with-at-least-a-one/
 """
 
 """
-26. remove duplicates in sorted array: https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+***************************************
+
+            1 POINTER
+
+***************************************
+"""
+
+"""
+1. 2 Sum: https://leetcode.com/problems/two-sum/
 
 Summary:
-1. keep 1 ptr which compares to next pointer, if its same then pop
-2. else inc the ptr
+1. dict = {}
+2. if num exists in dict.
+    return dict[num], i
+3. else:
+    dict[target-num] = i
+return -1 (target not found)
 
-Time/Space: O(n)/O(1)
+Time/Space: O(n)/O(n)
 """
 
-def remove_dupliactes(arr):
-    ptr = 0
-    while ptr < len(arr)-1:
-        if arr[ptr] == arr[ptr+1]: arr.pop(ptr+1)
-        else: ptr += 1
-    return arr
+def two_sum(arr):
+    dict = {}
+    for i, c in enumerate(arr):
+        if dict.get(c) != None:
+            return [dict[c], i]
+        dict[target-c] = i
+    return -1
+
+"""
+217. Contains Duplicate: https://leetcode.com/problems/contains-duplicate/
+
+Summary:
+set = ()
+keep checking in set before adding
+
+Time/Space: O(n)/O(n)
+"""
+
+def contains_duplicates(nums):
+    s = set()
+    for num in nums:
+        if num in s: return True
+        s.add(num)
+    return False
 
 """
 121. Best Time to Buy and Sell Stocks: https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
 
 Summary:
-1. find the minimum value and find the maximum difference.
-2. return maximum profit
+1. profit_today; max_profit= 0; minium= float('inf')
+2. find profit_today = profit_here-minium
+3. update minium
+4. update max_profit
 
 Time/Space: O(n)/O(1)
 """
 
-def Best_time_stock_i(arr):
-    if not arr or len(arr) == 1: return 0
-    min_val, max_profit = float('float'), 0
-    for i in range(len(arr)):
-        profit = arr[i] - min_val
-        min_val = min(min_val, arr[i])
-        max_profit = max(max_profit, profit)
+def Best_time_stock_i(prices):
+    max_profit= 0; minium= float('inf')
+    for profit_here in prices:
+        #profit_today = profit_here-minium
+        minium = min(minium, profit_here)
+        max_profit = max(max_profit, profit_here-minium)
     return max_profit
 
 """
 122. Best Time to Buy and Sell Stocks ii : https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
 
 Summary:
-1. if the next element is greater than curr that means profit. add to profit
+1. testcase: if len == 1
+maximum_profit = 0
+if prices[i-1]<prices[i]:
+    maximum_profit+= prices[i]-prices[i-1]
 
 Time/Space: O(n)/O(1)
 """
 
-def Best_time_stock_ii(arr):
-    if not arr or len(arr) == 1: return 0
-    profit = 0
-    for i in range(len(arr)-1):
-        if arr[i] < arr[i+1]:
-            profit += arr[i+1] - arr[i]
-    return profit
+def Best_time_stock_ii(prices):
+    if len(prices) == 1: return 0
+        maximum_profit = 0
+        for i in range(1, len(prices)):
+            if prices[i-1] < prices[i]:
+                maximum_profit+= prices[i]-prices[i-1]
+        return maximum_profit
 
 """
 123. Best Time to Buy and Sell Stocks atmost 2 time : https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/
 
 Summary:
 1. find the 1st max_profit
-2. find the 2nd max_profit just remove the 1st max while finding min
+2. find the 2nd max_profit ( exclude 1st transaction profit from 2nd transaction)
 3. return 2nd profit
 
 Time/Space: O(n)/O(1)
@@ -303,6 +370,127 @@ def count_prime(n):
     return sum(arr)
 
 """
+53. Maximum Subarray: https://leetcode.com/problems/maximum-subarray/
+
+Summary:
+# testcase: if nothing in arr
+imax = sum = nums[0]
+if adding this next number is going to inc the sum.
+    add next num in sum
+else
+    update sum with curr
+update imax
+
+Time/Space: O(n)/O(1)
+"""
+
+def max_subarray(nums):
+    if not nums: return 0
+        imax = sum = nums[0]
+        for i in range(1, len(nums)):
+            if sum+nums[i] > nums[i]:
+                sum += nums[i]
+            else:
+                sum = nums[i]
+            imax = max(imax, sum)
+        return imax
+
+"""
+152. Maximum Product Subarray: https://leetcode.com/problems/maximum-product-subarray/
+
+Summary:
+1. small = big = maxim = nums[0]; skip the first element
+2. keep one product of big num, and one of small num  (bcz of negative)
+    to check if the product will change big or small
+3. find the maximum of big and small
+
+Time/Space: O(n)/O(1)
+"""
+
+def mps(nums):
+    small = big = maxim = nums[0]
+    for i in nums[1:]:
+        small, big = min(i, i*big, i*small), max(i, i*big, i*small) # to check if the product will change big or small
+        maxim = max(maxim, small, big)
+    return maxim
+
+"""
+896. Monotonic array: https://leetcode.com/problems/monotonic-array/
+
+Summary:
+keep inc and dec flag as True
+update flag
+
+Time/Space: O(n)/O(1)
+"""
+
+def Monotonic(A):
+    inc= dec = True
+    for i in range(1, len(A)):
+        if A[i-1] < A[i]:
+            dec = False
+        elif A[i-1] > A[i]:
+            inc = False
+    return inc or dec
+
+"""
+***************************************
+
+            2 POINTER
+
+***************************************
+"""
+
+"""
+167. 2 Sum ii in sorted array: https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/
+
+Summary:
+1. left = 0; right = len(arr)-1
+if arr[left] == arr[right]:
+    return [left+1, right+!]
+if arr[left]+arr[right] > target:
+    reduce right
+else
+    inc left
+
+Time/Space: O(n)/O(1)
+"""
+
+def two_Sum_ii(arr, target):
+    left = 0; right = len(arr)-1
+    while left < right:
+        if arr[left] == arr[right]:
+            return [left+1, right+!]
+        if arr[left]+arr[right] > target:
+            right -= 1
+        else:
+            left += 1
+    return
+
+"""
+26. remove duplicates in sorted array: https://leetcode.com/problems/remove-duplicates-from-sorted-array/
+
+Summary:
+1. keep boundary= p; count= 1; iterator
+2. inc count if repeating
+3. if count <= 2: overwrite with boundry and inc boundary
+4. return len
+
+Time/Space: O(n)/O(1)
+"""
+
+def remove_dupliactes(arr):
+    p = count= 1
+        for i in range(1, len(nums)):
+            if nums[i-1] == nums[i]: count += 1
+            else: count = 1
+            
+            if count < 2:
+                nums[p] = nums[i]
+                p += 1
+        return p
+
+"""
 80. remove duplicates more than 2 times in sorted array: https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/
 
 Summary:
@@ -322,6 +510,92 @@ def remove_duplicates_twice(arr):
             arr[j] = arr[i]
             j += 1
     return arr[:j] # after j it will be unneccessary element
+
+"""
+238. Product of Array Except Self: https://leetcode.com/problems/product-of-array-except-self/
+
+Summary:
+1. keep a dp of same length as nums and make dp[0] = 1
+2. multi the prev dp and num. place it in curr position.
+3. keep var which keep cumulative product from behind (curr+1). then product the var with dp curr. place it in curr
+
+Time/Space: O(n)/O(n)
+"""
+
+def PAES(nums):
+    # create dp
+    dp = [0 for _ in range(len(nums))]
+    # fill first position
+    dp[0] = 1
+    # 1st round (product of prev dp and prev num)
+    for i in range(1, len(dp)):
+        dp[i] = dp[i-1]*nums[i-1]
+        
+    # 2nd round with cumulative var. product the var with curr position and place it
+    var = 1
+    for i in range(len(dp)-2, -1, -1):
+        var = nums[i+1]*var
+        dp[i] = var*dp[i]
+    # return dp
+    return dp
+
+"""
+11. Container With Most Water: https://leetcode.com/problems/container-with-most-water/
+
+Summary:
+1. keep 2 ptr: L and R; max_area = 0
+2. capture max_area
+3. if heigh L < heigh R: inc L else dec R
+
+Time/Space: O(n)/O(1)
+"""
+
+def CWMW(height):
+    left = imax = 0
+    right = len(height)-1
+    while left < right:
+        imax = max(imax, (right-left)*min(height[left], height[right]))
+        if height[left] < height[right]:
+            left += 1
+        else:
+            right -= 1
+    return imax
+
+"""
+42. Trapping Rain Water : https://leetcode.com/problems/trapping-rain-water/
+
+Summary:
+# keep 2 ptr: L, R
+maintain tallest height of left and right
+if lh < rh:
+    add lh to vol - height of building
+    inc Left
+else:
+    add rh to vol - height of building
+    inc right
+return vol
+
+Time/Space: O(n)/O(1)
+"""
+
+def Trapping_Rain_water(height):
+    L, R = 0, len(height)-1
+    lh = rh = vol = 0
+    while L < R:
+        lh, rh = max(lh, height[L]), max(rh, height[R])
+        if lh < rh:
+            vol += lh - height[L]; L += 1
+        else:
+            vol += rh - height[R]; R -= 1
+    return vol
+
+"""
+***************************************
+
+            3 POINTER
+
+***************************************
+"""
 
 """
 75. Dutch national flag: https://leetcode.com/problems/sort-colors/
@@ -352,6 +626,266 @@ def Dutch_national_flag(arr):
         else:
             curr += 1
     return arr
+
+"""
+15. 3 Sum: https://leetcode.com/problems/3sum/
+
+Summary:
+sort()
+3 ptr: i, L=i+1(L runs +1 from i); R
+if i doesn't have duplicates
+    find sum = nums[i]+nums[L]+nums[R]
+    if sum < target: inc L
+    elif sum > target: dec R
+    else: # if on target
+        append
+        remove duplicates by inc L and dec R
+        inc L and dec R (for duplicates)
+return res
+
+Time/Space: O(n2)/O(1)
+"""
+
+def threeSum(nums):
+    res = []
+    nums.sort()
+    for i in range(len(nums)):
+        if i > 0 and nums[i] == nums[i-1]: continue
+        L, R = i+1, len(nums)-1
+        while L< R:
+            sum = nums[i]+nums[L]+nums[R]
+            if sum > 0: R -= 1
+            elif sum < 0: L += 1
+            else:
+                res.append([nums[i], nums[L], nums[R]])
+                # to remove duplicates
+                while L < R and nums[L] == nums[L+1]:
+                    L += 1
+                while L < R and nums[R] == nums[R-1]:
+                    R -= 1
+                L += 1; R -= 1
+    return res
+
+"""
+16. 3 Sum Closest: https://leetcode.com/problems/3sum-closest/
+
+Summary:
+keep 1 diff
+keep 3 ptr: i, L=i+1, R (exactly like 3 Sum without duplicates)
+addition: if target-sum < diff then update diff
+testcase: if diff == 0: break 
+return target-diff (return sum)
+"""
+
+def 3SumClosest(nums, target):
+    diff = float('inf')
+    for i in range(len(nums)):
+        L, R = i+1, len(nums)-1
+        while L<R:
+            sum = nums[i]+nums[L]+nums[R]
+            #update diff
+            if abs(target-sum) < abs(diff):
+                diff = target-sum
+            if sum > target: R-=1
+            else: L+= 1
+        if diff == 0: break
+    return target-diff
+
+"""
+88. Merge sorted array with no space: https://leetcode.com/problems/merge-sorted-array/
+
+Summary:
+start from behind
+# keep 3 ptr. len(nums1), len(nums2), len(nums1+nums2)
+# keep added the greater one in the end
+# if still array is left, append it
+
+Time: O(n+m)/O(1)
+"""
+
+def merge(nums1, m, nums2, n):
+    p1, p2 = m-1, n-1
+    p = m+n-1
+    while p1 >= 0 and p2 >= 0:
+        if nums1[p1] > nums1[p2]:
+            nums1[p] = nums1[p1]
+            p1 -= 1
+        else:
+            nums1[p] = nums2[p2]
+            p2 -= 1
+        p -= 1
+    # leftout
+    nums1[:p2+1] = nums2[:p2+1]
+    return nums1
+
+"""
+670. Find maximum number: https://leetcode.com/problems/maximum-swap/
+
+Summary:
+create str to array
+keep 3 ptr: maximum number index, x, y
+start reading the array from end
+    if element > maximum number index then replace maximum number index with elem
+    if maximum number index > element: update x with curr_index and y with max number index
+In the end, we will have max and min (x and y)
+swap x with y
+create arr to str
+
+Time/Space: O(n)/O(1)
+"""
+
+def maximum_swap(num):
+    arr = [int(x) for x in num]
+    max_index, x, y = len(arr)-1, 0, 0
+    for i in range(len(arr)-1, -1, -1):
+        if arr[max_index] < arr[i]:
+            max_index = i
+        elif arr[max_index] > arr[i]:
+            x, y = i, max_index
+    arr[x], arr[y] = arr[y], arr[x]
+    return int(''.join(str(x) for x in arr))
+
+"""
+215. Kth largest element in array: https://leetcode.com/problems/kth-largest-element-in-an-array/
+
+Summary: Implement Quick Sort
+1. find pivot
+    a. make high as pivot and keep low
+    b. if found element < pivot
+        swap with the low and inc low boundary
+    c. swap pivot and high
+    d. return pivot
+2. do quick sort
+    a. find pivot
+    b. if len(arr)-k > pivot 
+        find in right most half # because pivot is center
+    c. if len(arr)-k < pivot 
+        find in left most half
+    d. else return pivot elem
+
+Time/Space: O(nlogn)/O(1)
+"""
+
+def Quick_Sort(arr):
+    return quicksort(arr)
+
+def quicksort(arr):
+    pivot, n = find_pivot(arr), len(arr)
+    if n-k > pivot:
+        return quicksort(arr[pivot+1:])
+    if n-k < pivot:
+        return quicksort(arr[:pivot])
+    else:
+        return arr[pivot]
+
+def find_pivot(arr):
+    low, high = 0, len(arr)
+    pivot = arr[high]
+    for i in range(low, high):
+        if arr[i] < pivot:
+            arr[i], arr[low] = arr[low], arr[i]
+            low += 1
+    arr[high], arr[low] = arr[low], arr[high]
+    return low
+
+"""
+***************************************
+
+            SLIDING THE WINDOW
+
+***************************************
+"""
+
+"""
+560.	Subarray sum equal to K: https://leetcode.com/problems/subarray-sum-equals-k/
+
+Summary:
+1. maintain sum cumulatively bcz we have to find continuous, dict and count (total continuous subarray sum)
+2. whenever sum-k exists then inc count with dict[sum-k]
+3. also, add sum in dict and keep inc it if exists.
+
+Time: O(n)/O(n)
+"""
+
+def SSK(nums, k):
+    sum = count = 0
+    dict = {0:1}
+    for num in nums:
+        # cumulative sum
+        sum += int(num)
+        # if sum-k exits
+        if sum-k in dict: count += dict[sum-k]
+        # keep every level sum in dict
+        if dict.get(sum) is None: dict[sum] = 0
+        dict[sum] += 1
+    return count
+
+"""
+***************************************
+
+        MERGE INTERVAL
+
+***************************************
+"""
+
+"""
+56. Merge Intervals: https://leetcode.com/problems/merge-intervals/
+
+Summary:
+sort()
+if 2nd element of prev >= 1st element of curr:
+    find a, b
+    replace a, b with curr
+    pop the prev
+else: inc curr
+return arr
+
+Time/Space: O(n)/O(1)
+"""
+
+def merge_intervals(intervals):
+    i= 1
+    intervals.sort()
+    while i < len(intervals):
+        print(i,intervals[i-1][1], intervals[i][1] )
+        if intervals[i-1][1] >= intervals[i][0]:
+            a, b = min(intervals[i-1][0], intervals[i][0]), max(intervals[i-1][1], intervals[i][1])
+            intervals[i] = [a, b]
+            intervals.pop(i-1)
+        else:
+            i+=1
+    return intervals
+
+"""
+986. Interval list intersection: https://leetcode.com/problems/interval-list-intersections/
+
+Summary:
+keep 2 ptr for A, B length
+find max(1st_A, 1st_B) and min(2nd_A, 2nd_B)
+whoever has less b value; inc that pointer
+
+Time: O(n+m)/O(1)
+"""
+
+def interval_list(A, B):
+    p=q=0
+    res = []
+    while p < len(A) and q < len(B):
+        a, b = max(A[p][0], B[q][0]), min(A[p][1], B[q][1])
+        if a <= b: res.append([a, b])
+        if B[q][1] < A[p][1]:
+            q+= 1
+        else:
+            p += 1
+    return res
+
+"""
+***************************************
+
+            SUBSET
+
+***************************************
+"""
 
 """
 78. Find the subset of array: https://leetcode.com/problems/subsets/
@@ -401,6 +935,14 @@ def subset_with_duplicates(arr):
     return output
 
 """
+***************************************
+
+            DFS
+
+***************************************
+"""
+
+"""
 46. Permutation: https://leetcode.com/problems/permutations/
 
 Summary:
@@ -446,6 +988,14 @@ def dfs(n, left, right, path, res):
     if path == 2*n: res.append(path)
     if left < n: dfs(n, left+1, right, path+"(", res)
     if right < left: dfs(n, left, right+1, path+")", res)
+
+"""
+***************************************
+
+            ADDITION
+
+***************************************
+"""
 
 """
 66. plus one: https://leetcode.com/problems/plus-one/
@@ -502,6 +1052,14 @@ def Multiple_strings(arr1, arr2):
     return ''.join(map(str, product[pt:]))
 
 """
+***************************************
+
+            API
+
+***************************************
+"""
+
+"""
 384. Shuffle an array: https://leetcode.com/problems/shuffle-an-array/
 
 Summary:
@@ -551,3 +1109,52 @@ class Solution:
                 rand = random.randint(1, count)
                 if count == rand: res = i
         return res
+
+"""
+***************************************
+
+            MATRIXS
+
+***************************************
+"""
+
+"""
+1428. Leftmost col with at least a one: https://leetcode.com/problems/leftmost-column-with-at-least-a-one/
+
+Summary:
+find dimensions of matrix
+take 2 ptr: r, c
+start reading c from end
+if matrix is 0 == inc r
+else dec col
+return col+1
+# testcase: if no 1
+
+Time/Space: O(n+m)/O(1)
+"""
+
+def leftmost(binaryMatrix):
+    row, col = binaryMatrix.dimensions()
+    r, c = 0, col-1
+    while r < row and c >= 0:
+        if binaryMatrix.get(r, c) == 0:
+            r+=1
+        else:
+            c-=1
+    
+    if c == col-1:
+        return -1
+    return c+1
+
+"""
+766. Diagonal comparison : https://leetcode.com/problems/toeplitz-matrix/
+
+Summary:
+1. iterate like normal matrix and compare with next diagonal
+Note: Dont read the last ele bcz they dont have any diagonal
+
+Time/Space:O(n)/O(1)
+"""
+
+def diagonal(matrix):
+    return all(matrix[r][c] == matrix[r+1][c+1] for r in range(len(matrix)-1) for c in range(len(matrix[0]-1)))
